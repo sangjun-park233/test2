@@ -2,30 +2,58 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>숫자 맞히기 게임</title>
+  <title>두더지 잡기 게임</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f9f9f9;
+      background-color: #fefbd8;
       text-align: center;
-      padding: 50px;
+      padding: 30px;
     }
 
     h1 {
-      color: #333;
+      color: #6c757d;
     }
 
-    input[type="number"] {
-      padding: 10px;
-      font-size: 18px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .hole {
+      width: 100px;
+      height: 100px;
+      background-color: #c1f0c1;
+      border-radius: 50%;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .mole {
       width: 60px;
-      text-align: center;
+      height: 60px;
+      background-image: url('https://emojicdn.elk.sh/🦔');
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: none;
+    }
+
+    #score {
+      font-size: 24px;
+      margin-top: 20px;
     }
 
     button {
+      margin-top: 30px;
       padding: 10px 20px;
       font-size: 16px;
-      margin-left: 10px;
       background-color: #28a745;
       color: white;
       border: none;
@@ -36,41 +64,70 @@
     button:hover {
       background-color: #218838;
     }
-
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #555;
-    }
   </style>
 </head>
 <body>
 
-  <h1>🔢 숫자 맞히기 게임</h1>
-  <p>1부터 10 사이의 숫자를 입력해보세요!</p>
+  <h1>🐹 두더지 잡기 게임</h1>
+  <div id="score">점수: 0</div>
+  <div class="grid">
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+  </div>
 
-  <input type="number" id="userInput" min="1" max="10">
-  <button onclick="checkGuess()">확인</button>
-
-  <div id="result"></div>
+  <button onclick="startGame()">게임 시작</button>
 
   <script>
-    const answer = Math.floor(Math.random() * 10) + 1;
+    const moles = document.querySelectorAll('.mole');
+    const scoreBoard = document.getElementById('score');
+    let score = 0;
+    let lastHole;
+    let timeUp = false;
 
-    function checkGuess() {
-      const userGuess = parseInt(document.getElementById("userInput").value);
-      const result = document.getElementById("result");
-
-      if (userGuess < 1 || userGuess > 10 || isNaN(userGuess)) {
-        result.textContent = "⚠️ 1부터 10 사이의 숫자를 입력해주세요!";
-      } else if (userGuess === answer) {
-        result.textContent = "🎉 정답입니다! 축하해요!";
-      } else {
-        result.textContent = userGuess < answer 
-          ? "⬆️ 더 큰 숫자입니다!" 
-          : "⬇️ 더 작은 숫자입니다!";
-      }
+    function randomTime(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
     }
+
+    function randomHole(holes) {
+      const idx = Math.floor(Math.random() * holes.length);
+      const hole = holes[idx];
+      if (hole === lastHole) return randomHole(holes);
+      lastHole = hole;
+      return hole;
+    }
+
+    function peep() {
+      const time = randomTime(400, 1000);
+      const hole = randomHole(document.querySelectorAll('.hole'));
+      const mole = hole.querySelector('.mole');
+      mole.style.display = 'block';
+      setTimeout(() => {
+        mole.style.display = 'none';
+        if (!timeUp) peep();
+      }, time);
+    }
+
+    function startGame() {
+      score = 0;
+      scoreBoard.textContent = '점수: 0';
+      timeUp = false;
+      peep();
+      setTimeout(() => timeUp = true, 15000); // 15초 게임
+    }
+
+    moles.forEach(mole => {
+      mole.addEventListener('click', () => {
+        if (mole.style.display === 'block') {
+          score++;
+          mole.style.display = 'none';
+          scoreBoard.textContent = `점수: ${score}`;
+        }
+      });
+    });
   </script>
 
 </body>
