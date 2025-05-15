@@ -2,42 +2,76 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>배경색 변경 예제</title>
+  <title>숫자 맞히기 게임</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
       text-align: center;
       padding: 50px;
-      background-color: #f0f0f0;
     }
+
+    h1 {
+      color: #333;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 60px;
+      text-align: center;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #007BFF;
+      margin-left: 10px;
+      background-color: #28a745;
       color: white;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background-color: #218838;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
-  <h1>배경색 바꾸기</h1>
-  <p>아래 버튼을 클릭하면 배경색이 랜덤하게 바뀝니다.</p>
-  <button onclick="changeBackgroundColor()">색 바꾸기</button>
+  <h1>🔢 숫자 맞히기 게임</h1>
+  <p>1부터 10 사이의 숫자를 입력해보세요!</p>
+
+  <input type="number" id="userInput" min="1" max="10">
+  <button onclick="checkGuess()">확인</button>
+
+  <div id="result"></div>
 
   <script>
-    function changeBackgroundColor() {
-      const colors = ['#FFCCCC', '#CCFFCC', '#CCCCFF', '#FFFF99', '#FFCCFF', '#99FFFF'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      document.body.style.backgroundColor = randomColor;
+    const answer = Math.floor(Math.random() * 10) + 1;
+
+    function checkGuess() {
+      const userGuess = parseInt(document.getElementById("userInput").value);
+      const result = document.getElementById("result");
+
+      if (userGuess < 1 || userGuess > 10 || isNaN(userGuess)) {
+        result.textContent = "⚠️ 1부터 10 사이의 숫자를 입력해주세요!";
+      } else if (userGuess === answer) {
+        result.textContent = "🎉 정답입니다! 축하해요!";
+      } else {
+        result.textContent = userGuess < answer 
+          ? "⬆️ 더 큰 숫자입니다!" 
+          : "⬇️ 더 작은 숫자입니다!";
+      }
     }
   </script>
 
 </body>
 </html>
-
