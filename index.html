@@ -1,2 +1,43 @@
-<h1>블로그</h1>
-<p>반갑습니다</p>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>배경색 변경 예제</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>배경색 바꾸기</h1>
+  <p>아래 버튼을 클릭하면 배경색이 랜덤하게 바뀝니다.</p>
+  <button onclick="changeBackgroundColor()">색 바꾸기</button>
+
+  <script>
+    function changeBackgroundColor() {
+      const colors = ['#FFCCCC', '#CCFFCC', '#CCCCFF', '#FFFF99', '#FFCCFF', '#99FFFF'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      document.body.style.backgroundColor = randomColor;
+    }
+  </script>
+
+</body>
+</html>
+
