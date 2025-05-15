@@ -2,56 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>두더지 잡기 게임</title>
+  <title>준우 엄마의 명 수 계산기</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #fefbd8;
       text-align: center;
-      padding: 30px;
+      padding: 40px;
+      background-color: #f0fff0;
     }
-
     h1 {
-      color: #6c757d;
+      color: #333;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-gap: 15px;
-      justify-content: center;
-      margin-top: 30px;
-    }
-
-    .hole {
-      width: 100px;
-      height: 100px;
-      background-color: #c1f0c1;
-      border-radius: 50%;
-      position: relative;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .mole {
-      width: 60px;
-      height: 60px;
-      background-image: url('https://emojicdn.elk.sh/🦔');
-      background-size: contain;
-      background-repeat: no-repeat;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: none;
-    }
-
-    #score {
-      font-size: 24px;
-      margin-top: 20px;
-    }
-
     button {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 10px 20px;
       font-size: 16px;
       background-color: #28a745;
@@ -60,74 +23,47 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #218838;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
-  <h1>🐹 두더지 잡기 게임</h1>
-  <div id="score">점수: 0</div>
-  <div class="grid">
-    <div class="hole"><div class="mole"></div></div>
-    <div class="hole"><div class="mole"></div></div>
-    <div class="hole"><div class="mole"></div></div>
-    <div class="hole"><div class="mole"></div></div>
-    <div class="hole"><div class="mole"></div></div>
-    <div class="hole"><div class="mole"></div></div>
-  </div>
+  <h1>👩‍🍳 준우 엄마의 명 수 계산기</h1>
+  <p>준우의 생일은 11월 27일이에요.<br>
+     오늘 기준으로 명 수를 계산해볼게요!</p>
 
-  <button onclick="startGame()">게임 시작</button>
+  <button onclick="calculateMyeongSu()">명 수 계산하기</button>
+
+  <div id="result"></div>
 
   <script>
-    const moles = document.querySelectorAll('.mole');
-    const scoreBoard = document.getElementById('score');
-    let score = 0;
-    let lastHole;
-    let timeUp = false;
+    function calculateMyeongSu() {
+      const birthDate = new Date('2023-11-27'); // 준우의 생일 (예: 2023년)
+      const today = new Date();
 
-    function randomTime(min, max) {
-      return Math.round(Math.random() * (max - min) + min);
+      const timeDiff = today.getTime() - birthDate.getTime();
+      const daysLived = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+      const month = 11;
+      const day = 27;
+      const myeongSu = month * day * daysLived;
+
+      const resultDiv = document.getElementById("result");
+
+      if (daysLived < 0) {
+        resultDiv.innerHTML = "아직 준우가 태어나지 않았어요! 👶";
+      } else {
+        resultDiv.innerHTML = `🧮 준우는 ${daysLived}일 동안 살았고,<br> 
+        명 수는 <strong>${myeongSu.toLocaleString()}</strong> 입니다!`;
+      }
     }
-
-    function randomHole(holes) {
-      const idx = Math.floor(Math.random() * holes.length);
-      const hole = holes[idx];
-      if (hole === lastHole) return randomHole(holes);
-      lastHole = hole;
-      return hole;
-    }
-
-    function peep() {
-      const time = randomTime(400, 1000);
-      const hole = randomHole(document.querySelectorAll('.hole'));
-      const mole = hole.querySelector('.mole');
-      mole.style.display = 'block';
-      setTimeout(() => {
-        mole.style.display = 'none';
-        if (!timeUp) peep();
-      }, time);
-    }
-
-    function startGame() {
-      score = 0;
-      scoreBoard.textContent = '점수: 0';
-      timeUp = false;
-      peep();
-      setTimeout(() => timeUp = true, 15000); // 15초 게임
-    }
-
-    moles.forEach(mole => {
-      mole.addEventListener('click', () => {
-        if (mole.style.display === 'block') {
-          score++;
-          mole.style.display = 'none';
-          scoreBoard.textContent = `점수: ${score}`;
-        }
-      });
-    });
   </script>
 
 </body>
